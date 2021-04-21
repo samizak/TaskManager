@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/app_bar_search"
+        android:checked="false"
+        android:icon="@drawable/ic_baseline_search_24"
+        android:title="@string/searchTasks"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/importExportTasks"
+        android:title="@string/import_export_tasks"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/hideCompletedTasks"
+        android:title="@string/hide_show_completed_tasks"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/signOut"
+        android:title="@string/sign_out"
+        app:showAsAction="never" />
+</menu>
