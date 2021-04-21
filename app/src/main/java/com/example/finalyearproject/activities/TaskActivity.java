@@ -1,7 +1,11 @@
 package com.example.finalyearproject.activities;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.SearchView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -49,5 +53,32 @@ public class TaskActivity extends AppCompatActivity {
 
         // Fab Button for Adding new Tasks
         fab.setOnClickListener(this::fabListener);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.task_layout_menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.app_bar_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        MenuItem hideCompletedTasksMenu = menu.findItem(R.id.hideCompletedTasks);
+        MenuItem importExportTaskMenu = menu.findItem(R.id.importExportTasks);
+        MenuItem signOutMenu = menu.findItem(R.id.signOut);
+
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                recyclerViewAdapter.getFilter().filter(newText);
+                return true;
+            }
+        });
+        return true;
     }
 }

@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -21,14 +23,17 @@ import com.example.finalyearproject.data.ToDoModel;
 
 import java.util.ArrayList;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> implements Filterable {
 
     private final Activity activity;
     private ArrayList<ToDoModel> taskList;
+    private final ArrayList<ToDoModel> filteredTaskList; // Used for search filtering
 
     public RecyclerViewAdapter(Activity activity, ArrayList<ToDoModel> taskList) {
         this.activity = activity;
         this.taskList = taskList;
+
+        filteredTaskList = new ArrayList<>(taskList);
     }
 
     private void MoreOptionsPopupListener(@NonNull MyViewHolder holder, View v, int position) {
@@ -74,6 +79,37 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
         AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                ArrayList<ToDoModel> filteredList = new ArrayList<>();
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (ToDoModel taskModel : filteredTaskList)
+                    if (taskModel.getTaskName().toLowerCase().contains(filterPattern))
+                        filteredList.add(taskModel);
+
+                FilterResults results = new FilterResults();
+                results.values = filteredList;
+
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                taskList.clear();
+                Iterable<?> arrayList = (Iterable<?>) results.values;
+
+                for (Object obj : arrayList)
+                    taskList.add((ToDoModel) obj);
+
+                notifyDataSetChanged();
+            }
+        };
     }
 
     @NonNull
