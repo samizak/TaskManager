@@ -5,7 +5,10 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +20,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.example.finalyearproject.activities.TaskActivity;
 import com.example.finalyearproject.data.DateModel;
+import com.example.finalyearproject.data.TaskModel;
 import com.example.finalyearproject.data.TimeModel;
 import com.example.finalyearproject.data.ToDoModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -28,7 +33,7 @@ import java.util.Calendar;
 
 public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
 
-    private final ToDoModel updateTaskModel = new ToDoModel();
+    private final TaskModel updateTaskModel = new TaskModel();
     private final DateModel dateModel = new DateModel();
     private final TimeModel timeModel = new TimeModel();
 
@@ -141,61 +146,77 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
         // Select Time Button pressed
         selectTimeButton.setOnClickListener(this::SelectTimeButtonListener);
     }
+    private void DateTimeTextViewListener(View v) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(v.getContext());
+        dialogBuilder.setTitle("Clear Date/Time?");
+        dialogBuilder.setMessage("Are you sure you want to delete the Date and Time from the task?");
+
+        dialogBuilder.setPositiveButton("Yes", (dialog, id_) -> dateTimeTextView.setText(""));
+        dialogBuilder.setNegativeButton("No", (dialog, id_) -> dialog.dismiss());
+        dialogBuilder.show();
+    }
 
     private void SaveButtonListener(View v) {
         String taskName = enterTaskEditText.getText().toString().trim();
+        String details = enterTaskDetails.getText().toString().trim();
 
-        // Show Error message if Task Name is empty
         if (taskName.isEmpty()) {
             Toast.makeText(context, "Task name cannot be empty!", Toast.LENGTH_LONG).show();
             return;
         }
 
-        // Else, Push the task to the list
-        ToDoModel taskModel = new ToDoModel();
-        taskModel.setTaskName(taskName);
-        taskModel.setIsCompleted(false);
-
-        CreateNewTask(taskName);
-        UpdateTask(taskName);
-
+        CreateNewTask(taskName, details);
+        UpdateTask(taskName, details);
         dismiss();
     }
-    private void SaveTask(ToDoModel taskModel, boolean isPushNewTask) {
+    private void SaveTask(TaskModel taskModel, boolean isPushNewTask) {
         if (isPushNewTask) {
-            TaskActivity.taskList.add(taskModel);
+            TaskActivity.PushToDatabase(taskModel);
             return;
         }
 
-        for(ToDoModel toDoModel : TaskActivity.taskList){
-            if(taskModel.getTaskName().equals(tempTaskName)){
-                toDoModel.setTaskName(taskModel.getTaskName());
-                toDoModel.setIsCompleted(taskModel.getIsCompleted());
-            }
-        }
+        // Get the key before updating
+        String key = taskModel.getId();
+        // Make changes to child with index value
+        TaskActivity.reference.child(key).setValue(taskModel);
     }
 
-    private void CreateNewTask(String taskName) {
+    private void CreateNewTask(String taskName, String details) {
         // Skip if we are not Creating a new Task...
         if (isUpdateTask) return;
 
-        ToDoModel taskModel = new ToDoModel();
+        TaskModel taskModel = new TaskModel();
 
         taskModel.setTaskName(taskName);
+        taskModel.setDetails(details);
+        taskModel.setDate(dateModel.FormatDate());
+        taskModel.setTime(timeModel.FormatTime());
         taskModel.setIsCompleted(false);
 
         SaveTask(taskModel, true);
     }
 
-    private void UpdateTask(String taskName) {
+    private void UpdateTask(String taskName, String details) {
         // Skip if we not Updating an existing Task
         if (!isUpdateTask) return;
 
-        ToDoModel taskModel = new ToDoModel();
-        tempTaskName = taskName;
+        TaskModel taskModel = new TaskModel();
+        String date = "";
+        String time = "";
+
+        // The Date and Time string (eg. 17/01/2021, 14:00)
+        String dateTime = dateTimeTextView.getText().toString().trim();
+
+        if (dateTime.length() > 0) {
+            date = dateTime.split(",")[0];
+            time = dateTime.split(",")[1];
+        }
 
         taskModel.setId(updateTaskModel.getId());
         taskModel.setTaskName(taskName);
+        taskModel.setDetails(details);
+        taskModel.setDate(date);
+        taskModel.setTime(time);
         taskModel.setIsCompleted(updateTaskModel.getIsCompleted());
 
         SaveTask(taskModel, false);
@@ -208,12 +229,27 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
         if (bundle == null) return;
 
         isUpdateTask = true;
+        int enabledColour = ContextCompat.getColor(context, R.color.primaryTextColour);
+
+        createNewTaskTextView.setText(R.string.editTaskTextView);
+
+        saveButton.setEnabled(true);
+        saveButton.setTextColor(enabledColour);
 
         updateTaskModel.setId(bundle.getString("taskID"));
         updateTaskModel.setTaskName(bundle.getString("taskName"));
+        updateTaskModel.setDetails(bundle.getString("taskDetails"));
+        updateTaskModel.setDate(bundle.getString("taskDate"));
+        updateTaskModel.setTime(bundle.getString("taskTime"));
         updateTaskModel.setIsCompleted(Boolean.parseBoolean(bundle.getString("taskCompleted")));
 
+
+        String dateTimeString = String.format("%s, %s", updateTaskModel.getDate(), updateTaskModel.getTime());
+        String dateTime = updateTaskModel.getDate().equals("") ? "" : dateTimeString;
+
         enterTaskEditText.setText(updateTaskModel.getTaskName());
+        enterTaskDetails.setText(updateTaskModel.getDetails());
+        dateTimeTextView.setText(dateTime);
     }
 
     @Override
@@ -227,11 +263,35 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
         createNewTaskTextView = v.findViewById(R.id.createNewTaskTextView);
         ImageButton dateTimePickerButton = v.findViewById(R.id.dateTimePickerButton);
 
+        // Make button text gray to show it's disabled
+        if (!isUpdateTask) saveButton.setTextColor(Color.GRAY);
+
         AutoFillIfEditingTask(getArguments());
         // Handle Date/Time pickers
         dateTimePickerButton.setOnClickListener(this::DateTimePickerButtonListener);
+        // Handle clear Date and Time from Text View when clicked
+        dateTimeTextView.setOnClickListener(this::DateTimeTextViewListener);
 
+        enterTaskEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String taskName = enterTaskEditText.getText().toString().trim();
+
+                int enabledColour = ContextCompat.getColor(context, R.color.primaryTextColour);
+                int saveButtonColour = taskName.isEmpty() ? Color.GRAY : enabledColour;
+
+                saveButton.setEnabled(!taskName.isEmpty());
+                saveButton.setTextColor(saveButtonColour);
+            }
+        });
         // Handle Saving the Task data
         saveButton.setOnClickListener(this::SaveButtonListener);
 

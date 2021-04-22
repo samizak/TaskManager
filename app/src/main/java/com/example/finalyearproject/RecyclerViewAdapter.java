@@ -3,10 +3,12 @@ package com.example.finalyearproject;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -19,23 +21,36 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.finalyearproject.RecyclerViewAdapter.MyViewHolder;
+import com.example.finalyearproject.activities.TaskActivity;
+import com.example.finalyearproject.data.TaskModel;
 import com.example.finalyearproject.data.ToDoModel;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> implements Filterable {
 
     private final Activity activity;
-    private ArrayList<ToDoModel> taskList;
-    private final ArrayList<ToDoModel> filteredTaskList; // Used for search filtering
+    private final ArrayList<TaskModel> taskList;
+    private final ArrayList<TaskModel> selectedTasksList = new ArrayList<>();
+    private final ArrayList<TaskModel> filteredTaskList; // Used for search filtering
 
-    public RecyclerViewAdapter(Activity activity, ArrayList<ToDoModel> taskList) {
+    private boolean isEnable = false;
+    private boolean isSelectAll = false;
+
+    private ActionMode actionMode;
+
+    public RecyclerViewAdapter(Activity activity, ArrayList<TaskModel> taskList) {
         this.activity = activity;
         this.taskList = taskList;
 
         filteredTaskList = new ArrayList<>(taskList);
     }
 
+    //==========================================================================================
+    //                              More Options Popup functions
+    //==========================================================================================
+    //region More Options Popup functions
     private void MoreOptionsPopupListener(@NonNull MyViewHolder holder, View v, int position) {
         PopupMenu popup = new PopupMenu(v.getContext(), holder.moreOptionsImageView);
         popup.inflate(R.menu.task_row_more_options_popup);
@@ -49,11 +64,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
     }
 
     private void EditTaskPopupListener(View v, int position) {
-        ToDoModel taskModel = taskList.get(position);
+        TaskModel taskModel = taskList.get(position);
         Bundle bundle = new Bundle();
         bundle.putString("taskID", taskModel.getId());
         bundle.putString("taskName", taskModel.getTaskName());
-        bundle.putString("isCompleted", String.valueOf(taskModel.getIsCompleted()));
+        bundle.putString("taskDetails", taskModel.getDetails());
+        bundle.putString("taskDate", taskModel.getDate());
+        bundle.putString("taskTime", taskModel.getTime());
+        bundle.putString("taskCompleted", String.valueOf(taskModel.getIsCompleted()));
 
         AddNewTaskBottomSheet addNewTaskBottomSheet = new AddNewTaskBottomSheet();
         addNewTaskBottomSheet.setArguments(bundle);
@@ -67,11 +85,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
 
         // Yes Button
         dialogBuilder.setPositiveButton("Yes", (dialog, id_) -> {
-            ToDoModel taskModel = taskList.get(position);
+            TaskModel taskModel = taskList.get(position);
             taskList.remove(taskModel);
             this.notifyDataSetChanged();
 
-            taskList.remove(taskModel);
+            DatabaseReference mPostReference = TaskActivity.reference.child(taskModel.getId());
+            mPostReference.removeValue();
         });
 
         // No Button
@@ -79,6 +98,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
 
         AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
+    }
+    //endregion
+
+    //==========================================================================================
+    //                      Handle Task Check box Checked/Unchecked
+    //==========================================================================================
+    //region Handle Task Check box Checked/Unchecked
+    private void TaskCompleteCheckboxListener(CompoundButton checkbox, TaskModel taskModel, boolean isChecked) {
+
+        // Update taskModel completion in database
+        DatabaseReference mPostReference = TaskActivity.reference.child(taskModel.getId());
+        mPostReference.child("isCompleted").setValue(isChecked);
     }
 
     @Override
@@ -105,7 +136,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
                 Iterable<?> arrayList = (Iterable<?>) results.values;
 
                 for (Object obj : arrayList)
-                    taskList.add((ToDoModel) obj);
+                    taskList.add((TaskModel) obj);
 
                 notifyDataSetChanged();
             }
@@ -121,7 +152,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        ToDoModel taskModel = taskList.get(position);
+        TaskModel taskModel = taskList.get(position);
         String taskName = taskModel.getTaskName();
 
         // Set the Task Name
@@ -130,10 +161,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
         // More options button Clicked
         holder.moreOptionsImageView.setOnClickListener(v -> MoreOptionsPopupListener(holder, v, position));
 
-        // Checkbox listener
-        holder.taskCompletedCheckBox.setOnCheckedChangeListener((checkbox, isChecked) ->{
-            Toast.makeText(activity, "Task completed: " + isChecked, Toast.LENGTH_LONG).show();
-        });
+        // Task Complete checkbox checked/unchecked
+        holder.taskCompletedCheckBox.setOnCheckedChangeListener((checkbox, isChecked) -> TaskCompleteCheckboxListener(checkbox, taskModel, isChecked));
     }
 
     @Override
