@@ -15,13 +15,4 @@
         android:title="@string/import_export_tasks"
         app:showAsAction="never" />
 
-    <item
-        android:id="@+id/hideCompletedTasks"
-        android:title="@string/hide_show_completed_tasks"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/signOut"
-        android:title="@string/sign_out"
-        app:showAsAction="never" />
 </menu>

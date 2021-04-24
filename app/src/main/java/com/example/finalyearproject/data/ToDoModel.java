@@ -20,6 +20,7 @@ public class ToDoModel {
     public String getId() {
         return id;
     }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -27,6 +28,7 @@ public class ToDoModel {
     public String getTaskName() {
         return taskName;
     }
+
     public void setTaskName(String taskName) {
         this.taskName = taskName;
     }
@@ -34,6 +36,7 @@ public class ToDoModel {
     public boolean getIsCompleted() {
         return isCompleted;
     }
+
     public void setIsCompleted(boolean isCompleted) {
         this.isCompleted = isCompleted;
     }

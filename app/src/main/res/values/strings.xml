@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Final Year Project</string>
+    <string name="app_name">Task Manager</string>
     <string name="task_name">Task Name</string>
     <string name="addTaskButton">addTaskButton</string>
     <string name="enter_a_new_task">Enter a new Task</string>
@@ -17,4 +17,9 @@
     <string name="sign_out">Sign Out</string>
     <string name="hide_show_completed_tasks">Hide/Show Completed Tasks</string>
     <string name="editTaskTextView">Edit Task</string>
+    <string name="sub_task_name">Sub Task Name</string>
+    <string name="enter_a_new_sub_task">Enter a new Sub Task</string>
+    <string name="no_sub_tasks">No Sub Tasks!</string>
+    <string name="select_all">Select All</string>
+    <string name="delete">Delete</string>
 </resources>

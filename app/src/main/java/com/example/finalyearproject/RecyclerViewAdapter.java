@@ -2,6 +2,7 @@ package com.example.finalyearproject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -14,13 +15,13 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.finalyearproject.RecyclerViewAdapter.MyViewHolder;
+import com.example.finalyearproject.activities.SubTaskActivity;
 import com.example.finalyearproject.activities.TaskActivity;
 import com.example.finalyearproject.data.TaskModel;
 import com.example.finalyearproject.data.ToDoModel;
@@ -102,6 +103,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
     //endregion
 
     //==========================================================================================
+    //                               Handle Task Clicks
+    //==========================================================================================
+    //region Handle Task Clicks
+    private void TaskClickedListener(TaskModel taskModel) {
+        // Open Sub Task Activity when taskModel clicked
+        Intent intent = new Intent(activity, SubTaskActivity.class);
+        intent.putExtra("taskID", taskModel.getId());
+        activity.startActivity(intent);
+    }
+
+    //==========================================================================================
     //                      Handle Task Check box Checked/Unchecked
     //==========================================================================================
     //region Handle Task Check box Checked/Unchecked
@@ -160,6 +172,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
 
         // More options button Clicked
         holder.moreOptionsImageView.setOnClickListener(v -> MoreOptionsPopupListener(holder, v, position));
+
+        // Short Task Click
+        holder.itemView.setOnClickListener(v -> TaskClickedListener(taskModel));
 
         // Task Complete checkbox checked/unchecked
         holder.taskCompletedCheckBox.setOnCheckedChangeListener((checkbox, isChecked) -> TaskCompleteCheckboxListener(checkbox, taskModel, isChecked));

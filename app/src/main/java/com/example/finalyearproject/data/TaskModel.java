@@ -21,6 +21,7 @@ public class TaskModel extends ToDoModel {
     public String getTaskName() {
         return taskName;
     }
+
     public void setTaskName(String taskName) {
         this.taskName = taskName;
     }
@@ -28,6 +29,7 @@ public class TaskModel extends ToDoModel {
     public boolean getIsCompleted() {
         return isCompleted;
     }
+
     public void setIsCompleted(boolean isCompleted) {
         this.isCompleted = isCompleted;
     }
@@ -35,6 +37,7 @@ public class TaskModel extends ToDoModel {
     public String getId() {
         return id;
     }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -42,6 +45,7 @@ public class TaskModel extends ToDoModel {
     public String getDetails() {
         return details;
     }
+
     public void setDetails(String description) {
         this.details = description;
     }
@@ -49,6 +53,7 @@ public class TaskModel extends ToDoModel {
     public String getTime() {
         return time;
     }
+
     public void setTime(String time) {
         this.time = time;
     }
@@ -56,6 +61,7 @@ public class TaskModel extends ToDoModel {
     public String getDate() {
         return date;
     }
+
     public void setDate(String date) {
         this.date = date;
     }
@@ -63,6 +69,7 @@ public class TaskModel extends ToDoModel {
     public HashMap<String, SubTaskModel> getSubTaskModel() {
         return subTaskModel;
     }
+
     public void setSubTaskModel(HashMap<String, SubTaskModel> subTaskModel) {
         this.subTaskModel = subTaskModel;
     }

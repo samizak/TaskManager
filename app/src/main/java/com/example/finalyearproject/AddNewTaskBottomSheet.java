@@ -1,10 +1,13 @@
 package com.example.finalyearproject;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -26,10 +29,11 @@ import com.example.finalyearproject.activities.TaskActivity;
 import com.example.finalyearproject.data.DateModel;
 import com.example.finalyearproject.data.TaskModel;
 import com.example.finalyearproject.data.TimeModel;
-import com.example.finalyearproject.data.ToDoModel;
+import com.example.finalyearproject.utils.NotificationReceiver;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.Calendar;
+import java.util.Objects;
 
 public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
 
@@ -59,6 +63,7 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
     //==========================================================================================
     //                              Date and Time picker Listeners
     //==========================================================================================
+    //region Handle  Date and Time picker Listeners
     private void SelectDateButtonListener(View v) {
         // Get Current Date
         final Calendar calendar = Calendar.getInstance();
@@ -146,6 +151,7 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
         // Select Time Button pressed
         selectTimeButton.setOnClickListener(this::SelectTimeButtonListener);
     }
+
     private void DateTimeTextViewListener(View v) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(v.getContext());
         dialogBuilder.setTitle("Clear Date/Time?");
@@ -155,7 +161,13 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
         dialogBuilder.setNegativeButton("No", (dialog, id_) -> dialog.dismiss());
         dialogBuilder.show();
     }
+    //endregion
 
+
+    //==========================================================================================
+    //                                  Handle Creating and Updating Tasks
+    //==========================================================================================
+    //region Handle Creating and Updating Tasks
     private void SaveButtonListener(View v) {
         String taskName = enterTaskEditText.getText().toString().trim();
         String details = enterTaskDetails.getText().toString().trim();
@@ -169,6 +181,7 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
         UpdateTask(taskName, details);
         dismiss();
     }
+
     private void SaveTask(TaskModel taskModel, boolean isPushNewTask) {
         if (isPushNewTask) {
             TaskActivity.PushToDatabase(taskModel);
@@ -193,6 +206,7 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
         taskModel.setTime(timeModel.FormatTime());
         taskModel.setIsCompleted(false);
 
+        SendNotification(taskModel);
         SaveTask(taskModel, true);
     }
 
@@ -219,8 +233,32 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
         taskModel.setTime(time);
         taskModel.setIsCompleted(updateTaskModel.getIsCompleted());
 
+        SendNotification(taskModel);
         SaveTask(taskModel, false);
     }
+
+    public void SendNotification(TaskModel taskModel) {
+        // Skip if date and time not set
+        if (dateModel.getYear() == -1) return;
+
+        Intent notificationIntent = new Intent(context, NotificationReceiver.class);
+        notificationIntent.putExtra("taskName", taskModel.getTaskName());
+        notificationIntent.putExtra("taskDetails", taskModel.getDetails());
+
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, notificationIntent, 0);
+        AlarmManager manager = (AlarmManager) Objects.requireNonNull(getActivity()).getSystemService(Context.ALARM_SERVICE);
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, dateModel.getDay());
+        cal.set(Calendar.MONTH, dateModel.getMonth());
+        cal.set(Calendar.YEAR, dateModel.getYear());
+        cal.set(Calendar.HOUR_OF_DAY, timeModel.getHour());
+        cal.set(Calendar.MINUTE, timeModel.getMinute());
+        cal.set(Calendar.SECOND, 0);
+
+        manager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), alarmIntent);
+    }
+    //endregion
 
 
     // Automatically fill data if editing a Task
@@ -251,6 +289,7 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
         enterTaskDetails.setText(updateTaskModel.getDetails());
         dateTimeTextView.setText(dateTime);
     }
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
