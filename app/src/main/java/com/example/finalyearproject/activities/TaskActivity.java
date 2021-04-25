@@ -214,6 +214,9 @@ public class TaskActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        // Fixes crash when back button pressed when importing/exporting using Intent
+        if (resultCode == 0) return;
+
         if (requestCode == 1) importExportData.ExportTasks(resultCode, data, taskList);
         else if (requestCode == 2) importExportData.ImportTasks(data);
     }
