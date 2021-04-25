@@ -26,6 +26,16 @@
         android:layout_marginBottom="30dp"
         android:contentDescription="@string/addTaskButton"
         android:src="@drawable/ic_baseline_add_24"
-        app:backgroundTint="@android:color/holo_blue_dark" />
+        app:backgroundTint="@android:color/holo_blue_dark"
+        app:tint="@color/white" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/rv_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/no_tasks"
+        android:textSize="24sp"
+        android:visibility="gone" />
 
 </RelativeLayout>

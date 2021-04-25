@@ -25,6 +25,8 @@ import com.example.finalyearproject.RecyclerViewAdapter;
 import com.example.finalyearproject.data.TaskModel;
 import com.example.finalyearproject.utils.ImportExportData;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,17 +40,30 @@ public class TaskActivity extends AppCompatActivity {
 
     public static final String TAG = "test";
     public static final String FILENAME = "data";
-    public static final ArrayList<TaskModel> taskList = new ArrayList<>();
     public static DatabaseReference reference;
+
+    private final ArrayList<TaskModel> taskList = new ArrayList<>();
+
     private RecyclerView recyclerView;
     private RecyclerViewAdapter recyclerViewAdapter;
     private TextView noDataTextView;
-
     private ImportExportData importExportData;
+
+
+    private void fabListener(View view) {
+        AddNewTaskBottomSheet addNewTaskBottomSheet = new AddNewTaskBottomSheet();
+        addNewTaskBottomSheet.show(getSupportFragmentManager(), "addNewTaskBottomSheet");
+    }
+
+    private void HideShowNoTaskMessage() {
+        int viewVisibility = taskList.size() == 0 ? View.VISIBLE : View.GONE;
+        noDataTextView.setVisibility(viewVisibility);
+    }
 
     //==========================================================================================
     //                                  Database Manager
     //==========================================================================================
+    //region Handle Database
     public static void PushToDatabase(TaskModel taskModel) {
         // Only create a new key if the Task does not have an ID.
         boolean isNewTask = taskModel.getId().length() == 0;
@@ -66,11 +81,6 @@ public class TaskActivity extends AppCompatActivity {
         reference.child(Objects.requireNonNull(key)).setValue(taskModel);
     }
 
-    private void fabListener(View view) {
-        AddNewTaskBottomSheet addNewTaskBottomSheet = new AddNewTaskBottomSheet();
-        addNewTaskBottomSheet.show(getSupportFragmentManager(), "addNewTaskBottomSheet");
-    }
-
     private void GetTaskDataFromFirebase() {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -81,6 +91,7 @@ public class TaskActivity extends AppCompatActivity {
                     TaskModel taskModel = ds.getValue(TaskModel.class);
                     taskList.add(taskModel);
                 }
+                HideShowNoTaskMessage();
 
                 recyclerViewAdapter = new RecyclerViewAdapter(TaskActivity.this, taskList);
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(TaskActivity.this);
@@ -95,6 +106,7 @@ public class TaskActivity extends AppCompatActivity {
             }
         });
     }
+    //endregion
 
     //==========================================================================================
     //                                  Menu Items
@@ -134,17 +146,33 @@ public class TaskActivity extends AppCompatActivity {
 
         return true;
     }
+
+    private boolean SignOutMenuListener(MenuItem menuItem) {
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        return true;
+    }
     //endregion
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_tasks);
+        setTitle("Task List");
 
         recyclerView = findViewById(R.id.recyclerView);
+        noDataTextView = findViewById(R.id.rv_empty);
         FloatingActionButton fab = findViewById(R.id.addTask);
 
-        reference = FirebaseDatabase.getInstance().getReference().child("Tasks");
+        // Gets the User reference
+        // Using UID as key as Firebase does not allow special characters...
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference(user.getUid());
+        userRef.child("email").setValue(user.getEmail());
+
+        reference = userRef.child("Tasks");
 
         GetTaskDataFromFirebase();
 
@@ -158,9 +186,8 @@ public class TaskActivity extends AppCompatActivity {
 
         MenuItem searchItem = menu.findItem(R.id.app_bar_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
-        //MenuItem hideCompletedTasksMenu = menu.findItem(R.id.hideCompletedTasks);
         MenuItem importExportTaskMenu = menu.findItem(R.id.importExportTasks);
-        //MenuItem signOutMenu = menu.findItem(R.id.signOut);
+        MenuItem signOutMenu = menu.findItem(R.id.signOut);
 
         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
@@ -178,8 +205,8 @@ public class TaskActivity extends AppCompatActivity {
         });
 
         importExportData = new ImportExportData(getApplicationContext(), getContentResolver());
-
         importExportTaskMenu.setOnMenuItemClickListener(this::ImportExportDialog);
+        signOutMenu.setOnMenuItemClickListener(this::SignOutMenuListener);
 
         return true;
     }

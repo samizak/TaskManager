@@ -3,6 +3,7 @@ package com.example.finalyearproject.activities;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -75,11 +76,13 @@ public class SubTaskActivity extends AppCompatActivity {
     }
 
     private void fabListener(View v) {
-        View dialogView = getLayoutInflater().inflate(R.layout.add_new_subtask, null);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(v.getContext());
+
+        LayoutInflater inflater2 = this.getLayoutInflater();
+        View dialogView = inflater2.inflate(R.layout.add_new_subtask, null);
 
         EditText subTaskNameEditText = dialogView.findViewById(R.id.subTaskNameEditText);
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(v.getContext());
         dialogBuilder.setView(dialogView);
         dialogBuilder.setTitle("Add Sub Task");
 
@@ -116,16 +119,14 @@ public class SubTaskActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_show_subtasks);
         setTitle("");
+        setContentView(R.layout.activity_show_subtasks);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         recyclerView = findViewById(R.id.recyclerView); // Sub-task recyclerview
         noDataTextView = findViewById(R.id.subTask_empty);
         FloatingActionButton fab = findViewById(R.id.addTask);
         collapsingToolbarLayout = findViewById(R.id.collapsingToolbarLayout);
-
-        Log.d(TaskActivity.TAG, "HERE");
 
         String taskID = getIntent().getStringExtra("taskID");
         getTaskData(taskID);

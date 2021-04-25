@@ -282,18 +282,19 @@ public class RecyclerViewAdapterSubTask extends RecyclerView.Adapter<MyViewHolde
     }
     //endregion
 
+
     // Add/Remove Strike Through text when Task checked/unchecked
     private void HandleTaskChecked(@NonNull MyViewHolder holder, SubTaskModel subTaskModel) {
-        holder.taskCompleted.setChecked(subTaskModel.getIsCompleted());
+        holder.taskCompletedCheckBox.setChecked(subTaskModel.getIsCompleted());
 
-        int getPaintFlags = holder.taskName.getPaintFlags();
+        int getPaintFlags = holder.taskNameTextView.getPaintFlags();
         int strikeThroughTextFlag = Paint.STRIKE_THRU_TEXT_FLAG;
         int paintFlags = getPaintFlags & (~strikeThroughTextFlag);
 
         if (subTaskModel.getIsCompleted())
             paintFlags = getPaintFlags | strikeThroughTextFlag;
 
-        holder.taskName.setPaintFlags(paintFlags);
+        holder.taskNameTextView.setPaintFlags(paintFlags);
     }
 
     // Checks if there are no sub tasks completed. If so, uncheck the parent task
@@ -322,8 +323,9 @@ public class RecyclerViewAdapterSubTask extends RecyclerView.Adapter<MyViewHolde
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         SubTaskModel subTaskModel = taskList.get(position);
-        String taskName_ = subTaskModel.getTaskName();
-        holder.taskName.setText(taskName_);
+        String taskName = subTaskModel.getTaskName();
+        // Set the Task Name
+        holder.taskNameTextView.setText(taskName);
 
         HandleTaskChecked(holder, subTaskModel);
         CheckNoSubTasksCompleted(taskModel);
@@ -331,7 +333,7 @@ public class RecyclerViewAdapterSubTask extends RecyclerView.Adapter<MyViewHolde
         // More options button Clicked
         holder.moreOptionsImageView.setOnClickListener(v -> MoreOptionsPopupListener(holder, v, position));
         // Task Complete checkbox checked/unchecked
-        holder.taskCompleted.setOnCheckedChangeListener((checkbox, isChecked) -> TaskCompleteCheckboxListener(subTaskModel, isChecked));
+        holder.taskCompletedCheckBox.setOnCheckedChangeListener((checkbox, isChecked) -> TaskCompleteCheckboxListener(subTaskModel, isChecked));
         // Short Task Click
         holder.itemView.setOnClickListener(v -> TaskClickedListener(holder, subTaskModel));
         // Long Task Click
@@ -346,17 +348,16 @@ public class RecyclerViewAdapterSubTask extends RecyclerView.Adapter<MyViewHolde
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        private final TextView taskName;
-        private final CheckBox taskCompleted;
-
+        private final TextView taskNameTextView;
+        private final CheckBox taskCompletedCheckBox;
         private final ImageView moreOptionsImageView;
         private final ImageView checkBoxMultiSelect;
 
         public MyViewHolder(@NonNull View view) {
             super(view);
 
-            taskName = view.findViewById(R.id.taskName);
-            taskCompleted = view.findViewById(R.id.taskCompleted);
+            taskNameTextView = view.findViewById(R.id.taskName);
+            taskCompletedCheckBox = view.findViewById(R.id.taskCompleted);
             moreOptionsImageView = view.findViewById(R.id.moreOptionsImageView);
             checkBoxMultiSelect = view.findViewById(R.id.itemSelectedCheckbox);
         }

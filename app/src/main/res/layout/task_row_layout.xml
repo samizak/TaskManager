@@ -29,6 +29,26 @@
             android:text="@string/task_name"
             android:textSize="20sp"
             android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/taskDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:padding="0dp"
+            android:hint="@string/task_details"
+            android:textSize="12sp"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/taskDateTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:padding="0dp"
+            android:hint="@string/task_date_time"
+            android:textSize="12sp"
+            android:visibility="visible" />
     </LinearLayout>
 
     <ImageView

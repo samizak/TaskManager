@@ -52,7 +52,6 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
     private boolean isUpdateTask = false;
 
     private Context context;
-    private String tempTaskName;
 
 
     private String formatDateTime() {

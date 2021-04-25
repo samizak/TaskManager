@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Task Manager</string>
     <string name="task_name">Task Name</string>
+    <string name="task_details">Task Details</string>
+    <string name="task_date_time">Task Date/Time</string>
     <string name="addTaskButton">addTaskButton</string>
     <string name="enter_a_new_task">Enter a new Task</string>
     <string name="create_new_task">Create new Task</string>
@@ -22,4 +24,8 @@
     <string name="no_sub_tasks">No Sub Tasks!</string>
     <string name="select_all">Select All</string>
     <string name="delete">Delete</string>
+    <string name="create_account">Create Account</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="no_tasks">No Tasks!</string>
 </resources>
