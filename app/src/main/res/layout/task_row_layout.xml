@@ -35,8 +35,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:padding="0dp"
             android:hint="@string/task_details"
+            android:padding="0dp"
             android:textSize="12sp"
             android:visibility="visible" />
 
@@ -45,8 +45,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:padding="0dp"
             android:hint="@string/task_date_time"
+            android:padding="0dp"
             android:textSize="12sp"
             android:visibility="visible" />
     </LinearLayout>

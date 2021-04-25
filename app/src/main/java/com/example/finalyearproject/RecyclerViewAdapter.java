@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,7 +30,6 @@ import com.example.finalyearproject.activities.SubTaskActivity;
 import com.example.finalyearproject.activities.TaskActivity;
 import com.example.finalyearproject.data.SubTaskModel;
 import com.example.finalyearproject.data.TaskModel;
-import com.example.finalyearproject.data.ToDoModel;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
@@ -168,6 +166,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
         DatabaseReference mPostReference = TaskActivity.reference.child(taskModel.getId());
         mPostReference.child("isCompleted").setValue(isChecked);
     }
+
     private void MarkSubTasksAsComplete(CompoundButton checkbox, TaskModel task) {
         View view = checkbox.getRootView();
         int incompleteSubTaskCount = 0;
@@ -428,12 +427,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
         HandleTaskChecked(holder, taskModel);
 
         // Show/Hide Description Text View
-        if (taskModel.getDetails() == null || taskModel.getDetails().trim().length() == 0) holder.taskDetailTextView.setVisibility(View.GONE);
+        if (taskModel.getDetails() == null || taskModel.getDetails().trim().length() == 0)
+            holder.taskDetailTextView.setVisibility(View.GONE);
         else holder.taskDetailTextView.setText(taskModel.getDetails());
 
         // Show/Hide Date/Time Text View
-        if (taskModel.getDate() == null || taskModel.getDate().trim().length() == 0) holder.taskDateTimeTextView.setVisibility(View.GONE);
-        else holder.taskDateTimeTextView.setText(String.format("%s, %s", taskModel.getDate(), taskModel.getTime()));
+        if (taskModel.getDate() == null || taskModel.getDate().trim().length() == 0)
+            holder.taskDateTimeTextView.setVisibility(View.GONE);
+        else
+            holder.taskDateTimeTextView.setText(String.format("%s, %s", taskModel.getDate(), taskModel.getTime()));
 
         // More options button Clicked
         holder.moreOptionsImageView.setOnClickListener(v -> MoreOptionsPopupListener(holder, v, position));

@@ -49,17 +49,6 @@ public class TaskActivity extends AppCompatActivity {
     private TextView noDataTextView;
     private ImportExportData importExportData;
 
-
-    private void fabListener(View view) {
-        AddNewTaskBottomSheet addNewTaskBottomSheet = new AddNewTaskBottomSheet();
-        addNewTaskBottomSheet.show(getSupportFragmentManager(), "addNewTaskBottomSheet");
-    }
-
-    private void HideShowNoTaskMessage() {
-        int viewVisibility = taskList.size() == 0 ? View.VISIBLE : View.GONE;
-        noDataTextView.setVisibility(viewVisibility);
-    }
-
     //==========================================================================================
     //                                  Database Manager
     //==========================================================================================
@@ -79,6 +68,16 @@ public class TaskActivity extends AppCompatActivity {
 
         // Create a child with index value
         reference.child(Objects.requireNonNull(key)).setValue(taskModel);
+    }
+
+    private void fabListener(View view) {
+        AddNewTaskBottomSheet addNewTaskBottomSheet = new AddNewTaskBottomSheet();
+        addNewTaskBottomSheet.show(getSupportFragmentManager(), "addNewTaskBottomSheet");
+    }
+
+    private void HideShowNoTaskMessage() {
+        int viewVisibility = taskList.size() == 0 ? View.VISIBLE : View.GONE;
+        noDataTextView.setVisibility(viewVisibility);
     }
 
     private void GetTaskDataFromFirebase() {
