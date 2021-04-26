@@ -39,7 +39,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="0.25"
                 android:orientation="vertical"
-                android:text="OR"
+                android:text="@string/or"
                 android:textAlignment="center" />
 
             <View
@@ -60,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="Email"
+                android:hint="@string/email"
                 android:inputType="textEmailAddress" />
 
             <EditText
@@ -68,7 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="Password"
+                android:hint="@string/password"
                 android:inputType="textPassword" />
 
             <Button
@@ -76,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Log In"
+                android:text="@string/log_in"
                 android:textAllCaps="false" />
 
             <LinearLayout
@@ -95,7 +95,7 @@
                     android:layout_marginEnd="5dp"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:text="No Account?"
+                    android:text="@string/no_account"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -105,7 +105,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="left"
-                    android:text="Sign up"
+                    android:text="@string/sign_up"
                     android:textColor="@color/design_default_color_primary_dark"
                     android:textSize="12sp"
                     android:textStyle="bold" />

@@ -1,9 +1,6 @@
 package com.example.finalyearproject.utils;
 
-import android.os.Build;
 import android.util.Base64;
-
-import androidx.annotation.RequiresApi;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -13,7 +10,6 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-@RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class EncryptDecryptData {
 
     private static final String password = "AES";

@@ -119,7 +119,7 @@ public class SubTaskActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setTitle("");
+        setTitle("Sub-Tasks");
         setContentView(R.layout.activity_show_subtasks);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 

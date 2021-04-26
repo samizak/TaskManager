@@ -36,7 +36,6 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
 
-
     private void OpenSignUpActivity() {
         Intent intent = new Intent(this, CreateAccountActivity.class);
         startActivity(intent);
