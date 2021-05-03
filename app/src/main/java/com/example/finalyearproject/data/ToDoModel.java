@@ -1,5 +1,8 @@
 package com.example.finalyearproject.data;
 
+/**
+ * This class defines a Base Task
+ */
 public class ToDoModel {
     protected String id;
     protected String taskName;

@@ -15,13 +15,12 @@ public class App extends Application {
         CreateNotificationChannels();
     }
 
+    /**
+     * Creates the notification Channels
+     */
     private void CreateNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel1 = new NotificationChannel(
-                    CHANNEL_1_ID,
-                    "Task",
-                    NotificationManager.IMPORTANCE_HIGH
-            );
+            NotificationChannel notificationChannel1 = new NotificationChannel(CHANNEL_1_ID, "Task", NotificationManager.IMPORTANCE_HIGH);
 
             notificationChannel1.setDescription("Channel 1");
 

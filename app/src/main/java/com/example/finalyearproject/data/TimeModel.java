@@ -2,6 +2,9 @@ package com.example.finalyearproject.data;
 
 import java.util.Locale;
 
+/**
+ * This class defines a Time
+ */
 public class TimeModel {
     private int hour = -1;
     private int minute = -1;
@@ -22,6 +25,10 @@ public class TimeModel {
         this.minute = minute;
     }
 
+    /**
+     * Formats the Integers used for time
+     * @return a Time string in the format: hh:mm
+     */
     public String FormatTime() {
         if (getHour() == -1) return "";
         return String.format(Locale.getDefault(), "%02d:%02d", getHour(), getMinute());

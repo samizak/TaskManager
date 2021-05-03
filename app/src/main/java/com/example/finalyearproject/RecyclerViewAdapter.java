@@ -35,6 +35,9 @@ import com.google.firebase.database.DatabaseReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * This Class is used for Displaying and Updating the RecyclerView for MainTasks
+ */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> implements Filterable {
 
     private final Activity activity;
@@ -59,6 +62,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
     //                                  Multi-Select Menu
     //==========================================================================================
     //region Multi-Select Menu
+
+    /**
+     * This method is called when the Select-All Button is pressed
+     */
     private void SelectAllButtonAction() {
         isSelectAll = !isSelectAll;
         selectedTasksList.clear();
@@ -71,6 +78,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
         notifyDataSetChanged();
     }
 
+    /**
+     * This method is called when the Delete Button is pressed
+     */
     private void DeleteMenuButtonAction(View view, ActionMode mode) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(view.getContext());
         dialogBuilder.setTitle("Delete?");
@@ -103,6 +113,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
     //                              More Options Popup functions
     //==========================================================================================
     //region More Options Popup functions
+    /**
+     * ImageView Listener, used for displaying the MoreOptions popup Menu
+     */
     private void MoreOptionsPopupListener(@NonNull MyViewHolder holder, View v, int position) {
         PopupMenu popup = new PopupMenu(v.getContext(), holder.moreOptionsImageView);
         popup.inflate(R.menu.task_row_more_options_popup);
@@ -115,6 +128,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
         });
     }
 
+    /**
+     * Menu Button Listener, displays the BottomSheet to edit task when clicked
+     */
     private void EditTaskPopupListener(View v, int position) {
         TaskModel taskModel = taskList.get(position);
         Bundle bundle = new Bundle();
@@ -130,6 +146,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
         addNewTaskBottomSheet.show(((AppCompatActivity) v.getContext()).getSupportFragmentManager(), "addNewTaskBottomSheet");
     }
 
+    /**
+     * Menu Button Listener, displays the delete Dialog to delete the task when clicked
+     */
     private void DeleteTaskPopupListener(View v, int position) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(v.getContext());
         dialogBuilder.setTitle("Delete?");
@@ -158,6 +177,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
     //                      Handle Task Check box Checked/Unchecked
     //==========================================================================================
     //region Handle Task Check box Checked/Unchecked
+
+    /**
+     * Checkbox Listener, marks a task as complete or incomplete when checked or unchecked
+     * @param checkbox the checkbox
+     * @param taskModel the Main Task
+     * @param isChecked true if the checkbox is checked
+     */
     private void TaskCompleteCheckboxListener(CompoundButton checkbox, TaskModel taskModel, boolean isChecked) {
         if (isChecked) MarkSubTasksAsComplete(checkbox, taskModel);
         else MarkSubTasksAsIncomplete(checkbox, taskModel);
@@ -167,11 +193,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
         mPostReference.child("isCompleted").setValue(isChecked);
     }
 
-    private void MarkSubTasksAsComplete(CompoundButton checkbox, TaskModel task) {
+    /**
+     * Marks all sub-tasks as complete when Main Task is checked
+     * @param checkbox the checkbox
+     * @param taskModel the Main Task
+     */
+    private void MarkSubTasksAsComplete(CompoundButton checkbox, TaskModel taskModel) {
         View view = checkbox.getRootView();
         int incompleteSubTaskCount = 0;
 
-        for (SubTaskModel subTaskModel : task.getSubTaskModel().values())
+        for (SubTaskModel subTaskModel : taskModel.getSubTaskModel().values())
             if (!subTaskModel.getIsCompleted())
                 incompleteSubTaskCount++;
 
@@ -189,15 +220,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
         // Yes Button
         dialogBuilder.setPositiveButton("Yes", (dialog, id_) -> {
             HashMap<String, SubTaskModel> subTasks = new HashMap<>();
-            for (SubTaskModel subTaskModel : task.getSubTaskModel().values()) {
+            for (SubTaskModel subTaskModel : taskModel.getSubTaskModel().values()) {
                 subTaskModel.setIsCompleted(true);
                 subTasks.put(subTaskModel.getId(), subTaskModel);
             }
 
-            task.setSubTaskModel(subTasks);
+            taskModel.setSubTaskModel(subTasks);
 
             // Update task completion in database
-            DatabaseReference reference = TaskActivity.reference.child(task.getId()).child("subTaskModel");
+            DatabaseReference reference = TaskActivity.reference.child(taskModel.getId()).child("subTaskModel");
             reference.setValue(subTasks);
         });
 
@@ -208,11 +239,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
         alertDialog.show();
     }
 
-    private void MarkSubTasksAsIncomplete(CompoundButton checkbox, TaskModel task) {
+    /**
+     * Marks all sub-tasks as incomplete when Main Task is unchecked
+     * @param checkbox the checkbox
+     * @param taskModel the Main Task
+     */
+    private void MarkSubTasksAsIncomplete(CompoundButton checkbox, TaskModel taskModel) {
         View view = checkbox.getRootView();
         int completeSubTaskCount = 0;
 
-        for (SubTaskModel subTaskModel : task.getSubTaskModel().values())
+        for (SubTaskModel subTaskModel : taskModel.getSubTaskModel().values())
             if (subTaskModel.getIsCompleted())
                 completeSubTaskCount++;
 
@@ -231,15 +267,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
         // Yes Button
         dialogBuilder.setPositiveButton("Yes", (dialog, id_) -> {
             HashMap<String, SubTaskModel> subTasks = new HashMap<>();
-            for (SubTaskModel subTaskModel : task.getSubTaskModel().values()) {
+            for (SubTaskModel subTaskModel : taskModel.getSubTaskModel().values()) {
                 subTaskModel.setIsCompleted(false);
                 subTasks.put(subTaskModel.getId(), subTaskModel);
             }
 
-            task.setSubTaskModel(subTasks);
+            taskModel.setSubTaskModel(subTasks);
 
             // Update task completion in database
-            DatabaseReference reference = TaskActivity.reference.child(task.getId()).child("subTaskModel");
+            DatabaseReference reference = TaskActivity.reference.child(taskModel.getId()).child("subTaskModel");
             reference.setValue(subTasks);
         });
 
@@ -256,6 +292,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
     //                               Handle Task Clicks
     //==========================================================================================
     //region Handle Task Clicks
+    /**
+     * Handles short clicks, used for opening Sub-Task Activity list
+     */
     private void TaskClickedListener(@NonNull MyViewHolder holder, TaskModel taskModel) {
         if (isEnable) {
             HandleMultiSelectTasks(holder);
@@ -268,6 +307,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
         activity.startActivity(intent);
     }
 
+    /**
+     * Handles Long Clicks, for selecting multiple Tasks
+     */
     private boolean TaskLongClickedListener(@NonNull MyViewHolder holder, View view) {
         if (isEnable) {
             HandleMultiSelectTasks(holder);
@@ -318,7 +360,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
         return true;
     }
 
-    // Handles Select All Tasks button
+    /**
+     * Handles Select All Tasks button
+     */
     private void HandleMultiSelectAllTasks(@NonNull MyViewHolder holder) {
         int checkBoxVisibility = View.VISIBLE;
         int moreOptionsVisibility = View.GONE;
@@ -335,7 +379,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
         holder.itemView.setBackgroundColor(itemViewBgColor);
     }
 
-    // Handles Multi Select Tasks click
+    /**
+     * Handles Multi Select Tasks click
+     */
     private void HandleMultiSelectTasks(@NonNull MyViewHolder holder) {
         TaskModel taskModel = taskList.get(holder.getAdapterPosition());
 
@@ -364,7 +410,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
     //endregion
 
 
-    // Add/Remove Strike Through text when Task checked/unchecked
+    /**
+     * Add/Remove Strikethrough text when Task is checked/unchecked
+     */
     private void HandleTaskChecked(@NonNull MyViewHolder holder, TaskModel taskModel) {
         holder.taskCompletedCheckBox.setChecked(taskModel.getIsCompleted());
 
@@ -379,6 +427,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
     }
 
 
+    /**
+     * Method used for Filtering Tasks
+     * @return search Filter
+     */
     @Override
     public Filter getFilter() {
         return new Filter() {
@@ -387,6 +439,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
                 ArrayList<TaskModel> filteredList = new ArrayList<>();
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
+                // Creates new List of Tasks that contains the filter pattern
                 for (TaskModel taskModel : filteredTaskList)
                     if (taskModel.getTaskName().toLowerCase().contains(filterPattern))
                         filteredList.add(taskModel);

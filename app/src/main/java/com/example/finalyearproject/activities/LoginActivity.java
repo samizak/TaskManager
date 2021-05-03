@@ -26,6 +26,9 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.util.Objects;
 
+/**
+ * The Activity for Logging into an Account
+ */
 public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 100;
@@ -36,11 +39,17 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
 
+    /**
+     * Opens the activity to create a new account
+     */
     private void OpenSignUpActivity() {
         Intent intent = new Intent(this, CreateAccountActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Opens the tasks activity when successfully logged in
+     */
     private void SuccessfullyLoggedIn() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         // Return if currentUser is null
@@ -51,10 +60,15 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Checks the login details
+     * @param task A Firebase task
+     */
     private void CheckLoginDetails(Task<?> task) {
         if (!task.isSuccessful()) {
             Log.d(TaskActivity.TAG, "signInWithCredential:failure", task.getException());
             Toast.makeText(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
+            return;
         }
 
         SuccessfullyLoggedIn();
@@ -62,11 +76,17 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), "Logged in Successfully!", Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * Sign-in with Google button Listener
+     */
     private void SignInWithGoogleListener() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    /**
+     * Sign-in with Email and Password button Listener
+     */
     private void SignInWithEmailListener() {
         String email = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();

@@ -2,6 +2,9 @@ package com.example.finalyearproject.data;
 
 import java.util.HashMap;
 
+/**
+ * This class defines a Main Task
+ */
 public class TaskModel extends ToDoModel {
     private String details;
     private String date;

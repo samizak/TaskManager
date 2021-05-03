@@ -31,6 +31,9 @@ import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 
+/**
+ * This Class is used for Displaying and Updating the RecyclerView for Sub-Tasks
+ */
 public class RecyclerViewAdapterSubTask extends RecyclerView.Adapter<MyViewHolder> {
 
     private final Activity activity;
@@ -55,6 +58,9 @@ public class RecyclerViewAdapterSubTask extends RecyclerView.Adapter<MyViewHolde
     //                                  Multi-Select Menu
     //==========================================================================================
     //region Multi-Select Menu
+    /**
+     * This method is called when the Select-All Button is pressed
+     */
     private void SelectAllButtonAction() {
         isSelectAll = !isSelectAll;
         selectedTasksList.clear();
@@ -67,6 +73,9 @@ public class RecyclerViewAdapterSubTask extends RecyclerView.Adapter<MyViewHolde
         notifyDataSetChanged();
     }
 
+    /**
+     * This method is called when the Delete Button is pressed
+     */
     private void DeleteMenuButtonAction(View view, ActionMode mode) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(view.getContext());
         dialogBuilder.setTitle("Delete?");
@@ -98,6 +107,9 @@ public class RecyclerViewAdapterSubTask extends RecyclerView.Adapter<MyViewHolde
     //                              More Options Popup functions
     //==========================================================================================
     //region More Options Popup functions
+    /**
+     * ImageView Listener, used for displaying the MoreOptions popup Menu
+     */
     private void MoreOptionsPopupListener(@NonNull MyViewHolder holder, View v, int position) {
         PopupMenu popup = new PopupMenu(v.getContext(), holder.moreOptionsImageView);
         popup.inflate(R.menu.task_row_more_options_popup);
@@ -110,6 +122,9 @@ public class RecyclerViewAdapterSubTask extends RecyclerView.Adapter<MyViewHolde
         });
     }
 
+    /**
+     * Menu Button Listener, displays a new Dialog to edit task when clicked
+     */
     private void EditTaskPopupListener(View v, int position) {
         SubTaskModel subTaskModel = taskList.get(position);
         LayoutInflater inflater = activity.getLayoutInflater();
@@ -137,6 +152,9 @@ public class RecyclerViewAdapterSubTask extends RecyclerView.Adapter<MyViewHolde
         alertDialog.show();
     }
 
+    /**
+     * Menu Button Listener, displays the delete Dialog to delete the task when clicked
+     */
     private void DeleteTaskPopupListener(View v, int position) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(v.getContext());
         dialogBuilder.setTitle("Delete?");
@@ -164,6 +182,11 @@ public class RecyclerViewAdapterSubTask extends RecyclerView.Adapter<MyViewHolde
     //                      Handle Task Check box Checked/Unchecked
     //==========================================================================================
     //region Handle Task Check box Checked/Unchecked
+    /**
+     * Checkbox Listener, marks a task as complete or incomplete when checked or unchecked
+     * @param subTaskModel the Sub-Task
+     * @param isChecked true if the checkbox is checked
+     */
     private void TaskCompleteCheckboxListener(SubTaskModel subTaskModel, boolean isChecked) {
         // Update taskModel completion in database
         DatabaseReference reference = TaskActivity.reference.child(taskModel.getId()).child("subTaskModel").child(subTaskModel.getId());
@@ -175,6 +198,9 @@ public class RecyclerViewAdapterSubTask extends RecyclerView.Adapter<MyViewHolde
     //                               Handle Task Clicks
     //==========================================================================================
     //region Handle Task Clicks
+    /**
+     * Handles short clicks, used for opening Sub-Task Activity list
+     */
     private void TaskClickedListener(@NonNull MyViewHolder holder, SubTaskModel taskModel) {
         if (isEnable) {
             HandleMultiSelectTasks(holder);
@@ -187,6 +213,9 @@ public class RecyclerViewAdapterSubTask extends RecyclerView.Adapter<MyViewHolde
         activity.startActivity(intent);
     }
 
+    /**
+     * Handles Long Clicks, for selecting multiple Tasks
+     */
     private boolean TaskLongClickedListener(@NonNull MyViewHolder holder, View view) {
         if (isEnable) {
             HandleMultiSelectTasks(holder);
@@ -237,7 +266,9 @@ public class RecyclerViewAdapterSubTask extends RecyclerView.Adapter<MyViewHolde
         return true;
     }
 
-    // Handles Select All Tasks button
+    /**
+     * Handles Select All Tasks button
+     */
     private void HandleMultiSelectAllTasks(@NonNull MyViewHolder holder) {
         int checkBoxVisibility = View.VISIBLE;
         int moreOptionsVisibility = View.GONE;
@@ -254,7 +285,9 @@ public class RecyclerViewAdapterSubTask extends RecyclerView.Adapter<MyViewHolde
         holder.itemView.setBackgroundColor(itemViewBgColor);
     }
 
-    // Handles Multi Select Tasks click
+    /**
+     * Handles Multi Select Tasks click
+     */
     private void HandleMultiSelectTasks(@NonNull MyViewHolder holder) {
         SubTaskModel taskModel = taskList.get(holder.getAdapterPosition());
 
@@ -283,7 +316,9 @@ public class RecyclerViewAdapterSubTask extends RecyclerView.Adapter<MyViewHolde
     //endregion
 
 
-    // Add/Remove Strike Through text when Task checked/unchecked
+    /**
+     * Add/Remove Strikethrough text when Sub-Task is checked/unchecked
+     */
     private void HandleTaskChecked(@NonNull MyViewHolder holder, SubTaskModel subTaskModel) {
         holder.taskCompletedCheckBox.setChecked(subTaskModel.getIsCompleted());
 
@@ -297,7 +332,9 @@ public class RecyclerViewAdapterSubTask extends RecyclerView.Adapter<MyViewHolde
         holder.taskNameTextView.setPaintFlags(paintFlags);
     }
 
-    // Checks if there are no sub tasks completed. If so, uncheck the parent task
+    /**
+     * Checks if there are no sub-tasks completed. If so, uncheck the parent task
+     */
     private void CheckNoSubTasksCompleted(TaskModel task) {
         int subTasksCompleted = 0;
 

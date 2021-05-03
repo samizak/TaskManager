@@ -35,6 +35,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import java.util.Calendar;
 import java.util.Objects;
 
+/**
+ * The BottomSheet displayed for Creating or Modifying a Main Task
+ */
 public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
 
     private final TaskModel updateTaskModel = new TaskModel();
@@ -54,6 +57,10 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
     private Context context;
 
 
+    /**
+     * Formats the Date and Time into a single String
+     * @return Formatted Date and Time String
+     */
     private String formatDateTime() {
         if (dateModel.FormatDate().equals("")) return "";
         return String.format("%s, %s", dateModel.FormatDate(), timeModel.FormatTime());
@@ -63,6 +70,10 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
     //                              Date and Time picker Listeners
     //==========================================================================================
     //region Handle  Date and Time picker Listeners
+
+    /**
+     * Button Listener used for Selecting the Date
+     */
     private void SelectDateButtonListener(View v) {
         // Get Current Date
         final Calendar calendar = Calendar.getInstance();
@@ -82,6 +93,9 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
         datePickerDialog.show();
     }
 
+    /**
+     * Button Listener used for Selecting Time
+     */
     private void SelectTimeButtonListener(View v) {
         // Get Current Time
         final Calendar calendar = Calendar.getInstance();
@@ -100,6 +114,9 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
         timePickerDialog.show();
     }
 
+    /**
+     * Button Listener used for displaying the Date and Time picker Popup Dialog
+     */
     private void DateTimePickerButtonListener(View v) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
 
@@ -151,6 +168,9 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
         selectTimeButton.setOnClickListener(this::SelectTimeButtonListener);
     }
 
+    /**
+     * TextView Listener used for clearing the Date and Time String when clicked
+     */
     private void DateTimeTextViewListener(View v) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(v.getContext());
         dialogBuilder.setTitle("Clear Date/Time?");
@@ -167,6 +187,9 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
     //                                  Handle Creating and Updating Tasks
     //==========================================================================================
     //region Handle Creating and Updating Tasks
+    /**
+     * Button Listener used for Saving a Main Task
+     */
     private void SaveButtonListener(View v) {
         String taskName = enterTaskEditText.getText().toString().trim();
         String details = enterTaskDetails.getText().toString().trim();
@@ -181,6 +204,11 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
         dismiss();
     }
 
+    /**
+     * Saves a Task
+     * @param taskModel the Main Task
+     * @param isPushNewTask true if a new task is being created
+     */
     private void SaveTask(TaskModel taskModel, boolean isPushNewTask) {
         if (isPushNewTask) {
             TaskActivity.PushToDatabase(taskModel);
@@ -193,6 +221,11 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
         TaskActivity.reference.child(key).setValue(taskModel);
     }
 
+    /**
+     * Creates a new Task
+     * @param taskName the name of the task
+     * @param details the details of the task
+     */
     private void CreateNewTask(String taskName, String details) {
         // Skip if we are not Creating a new Task...
         if (isUpdateTask) return;
@@ -209,6 +242,11 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
         SaveTask(taskModel, true);
     }
 
+    /**
+     * Updates an existing Task
+     * @param taskName the name of the task
+     * @param details the details of the task
+     */
     private void UpdateTask(String taskName, String details) {
         // Skip if we not Updating an existing Task
         if (!isUpdateTask) return;
@@ -236,6 +274,10 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
         SaveTask(taskModel, false);
     }
 
+    /**
+     * Created a Notification at the Date and Time specified by the user
+     * @param taskModel the Main Task
+     */
     public void SendNotification(TaskModel taskModel) {
         // Skip if date and time not set
         if (dateModel.getYear() == -1) return;
@@ -260,7 +302,10 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
     //endregion
 
 
-    // Automatically fill data if editing a Task
+    /**
+     * Automatically fills in the data when editing a Task
+     * @param bundle a bundle used for passing data between Activities
+     */
     private void AutoFillIfEditingTask(Bundle bundle) {
         // Only automatically fill details when in edit mode!
         if (bundle == null) return;

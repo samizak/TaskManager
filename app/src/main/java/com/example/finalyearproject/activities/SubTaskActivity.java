@@ -28,6 +28,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
+/**
+ * The Activities for Creating, Modifying and Deleting Sub-Tasks
+ */
 public class SubTaskActivity extends AppCompatActivity {
 
     private TaskModel taskModel;
@@ -37,8 +40,10 @@ public class SubTaskActivity extends AppCompatActivity {
     private TextView noDataTextView;
     private CollapsingToolbarLayout collapsingToolbarLayout;
 
-
-    // Get Task from Firebase
+    /**
+     * Gets the Main Task from Firebase Database
+     * @param id the ID of the Main Task
+     */
     private void getTaskData(final String id) {
         TaskActivity.reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -70,11 +75,18 @@ public class SubTaskActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Displays the message to inform the user there are no sub-tasks
+     */
     private void HideShowNoTaskMessage() {
         int viewVisibility = taskModel.getSubTaskModel().size() == 0 ? View.VISIBLE : View.GONE;
         noDataTextView.setVisibility(viewVisibility);
     }
 
+    /**
+     * Floating Action Button Listener, opens a new Dialog for Creating or Modifying a sub-task
+     * @param v the View
+     */
     private void fabListener(View v) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(v.getContext());
 

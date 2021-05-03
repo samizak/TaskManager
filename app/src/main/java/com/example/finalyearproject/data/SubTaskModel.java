@@ -1,12 +1,10 @@
 package com.example.finalyearproject.data;
 
+/**
+ * This class defines a Sub-Task
+ */
 public class SubTaskModel extends ToDoModel {
 
     public SubTaskModel() {
-    }
-
-    public SubTaskModel(String taskName, boolean isCompleted) {
-        this.taskName = taskName;
-        this.isCompleted = isCompleted;
     }
 }

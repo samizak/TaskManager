@@ -17,6 +17,9 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
+/**
+ * The Activity for Creating a new Account
+ */
 public class CreateAccountActivity extends AppCompatActivity {
 
     private EditText emailEditText;
@@ -24,7 +27,9 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
-
+    /**
+     * Opens the tasks activity when successfully logged in
+     */
     private void SuccessfullyLoggedIn() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         // Return if currentUser is null
@@ -35,6 +40,10 @@ public class CreateAccountActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Checks the login details
+     * @param task A Firebase task
+     */
     private void CheckLoginDetails(Task<?> task) {
         if (!task.isSuccessful()) {
             Log.d(TaskActivity.TAG, "signInWithCredential:failure", task.getException());
@@ -46,6 +55,9 @@ public class CreateAccountActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), "Account Created!", Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * Create new Account Button Listener
+     */
     private void CreateAccountButtonListener() {
         boolean isEmailValid = IsValidEmail(emailEditText.getText());
         boolean isPasswordValid = IsPasswordValid(passwordEditText.getText());
@@ -69,10 +81,20 @@ public class CreateAccountActivity extends AppCompatActivity {
         }
     }
 
-    private boolean IsValidEmail(CharSequence target) {
-        return (!target.toString().isEmpty() && Patterns.EMAIL_ADDRESS.matcher(target).matches());
+    /**
+     * Checks if the Email is in a Valid format
+     * @param email The Email
+     * @return true if the Email is in a valid format
+     */
+    private boolean IsValidEmail(CharSequence email) {
+        return (email.toString() != null && !email.toString().trim().isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
 
+    /**
+     * Checks if the Password is valid
+     * @param password The Password
+     * @return true if the password is in a valid format
+     */
     private boolean IsPasswordValid(CharSequence password) {
         return password.length() > 5;
     }

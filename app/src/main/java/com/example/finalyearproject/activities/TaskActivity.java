@@ -36,6 +36,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * The Activities for Creating, Modifying and Deleting Main Tasks
+ */
 public class TaskActivity extends AppCompatActivity {
 
     public static final String TAG = "test";
@@ -49,10 +52,32 @@ public class TaskActivity extends AppCompatActivity {
     private TextView noDataTextView;
     private ImportExportData importExportData;
 
+
+    /**
+     * Floating Action Button Listener, opens a new BottomSheet for Creating or Modifying a task
+     * @param view the View
+     */
+    private void fabListener(View view) {
+        AddNewTaskBottomSheet addNewTaskBottomSheet = new AddNewTaskBottomSheet();
+        addNewTaskBottomSheet.show(getSupportFragmentManager(), "addNewTaskBottomSheet");
+    }
+
+    /**
+     * Displays the message to inform the user there are no tasks
+     */
+    private void HideShowNoTaskMessage() {
+        int viewVisibility = taskList.size() == 0 ? View.VISIBLE : View.GONE;
+        noDataTextView.setVisibility(viewVisibility);
+    }
+
     //==========================================================================================
     //                                  Database Manager
     //==========================================================================================
     //region Handle Database
+    /**
+     * Saves a Task to the Firebase Database
+     * @param taskModel the Main Task
+     */
     public static void PushToDatabase(TaskModel taskModel) {
         // Only create a new key if the Task does not have an ID.
         boolean isNewTask = taskModel.getId().length() == 0;
@@ -70,16 +95,9 @@ public class TaskActivity extends AppCompatActivity {
         reference.child(Objects.requireNonNull(key)).setValue(taskModel);
     }
 
-    private void fabListener(View view) {
-        AddNewTaskBottomSheet addNewTaskBottomSheet = new AddNewTaskBottomSheet();
-        addNewTaskBottomSheet.show(getSupportFragmentManager(), "addNewTaskBottomSheet");
-    }
-
-    private void HideShowNoTaskMessage() {
-        int viewVisibility = taskList.size() == 0 ? View.VISIBLE : View.GONE;
-        noDataTextView.setVisibility(viewVisibility);
-    }
-
+    /**
+     * Gets the all the Tasks from Firebase Database
+     */
     private void GetTaskDataFromFirebase() {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -111,6 +129,10 @@ public class TaskActivity extends AppCompatActivity {
     //                                  Menu Items
     //==========================================================================================
     //region Handle Menu Items
+
+    /**
+     * Displays the Dialog for Importing and Exporting tasks
+     */
     private boolean ImportExportDialog(MenuItem menuItem) {
         String[] optionType = new String[]{"Import tasks", "Export tasks"};
 
@@ -146,6 +168,9 @@ public class TaskActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * The Sign Out Button Listener
+     */
     private boolean SignOutMenuListener(MenuItem menuItem) {
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(this, LoginActivity.class);
