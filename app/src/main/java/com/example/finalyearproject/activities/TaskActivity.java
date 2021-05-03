@@ -52,30 +52,9 @@ public class TaskActivity extends AppCompatActivity {
     private TextView noDataTextView;
     private ImportExportData importExportData;
 
-
-    /**
-     * Floating Action Button Listener, opens a new BottomSheet for Creating or Modifying a task
-     * @param view the View
-     */
-    private void fabListener(View view) {
-        AddNewTaskBottomSheet addNewTaskBottomSheet = new AddNewTaskBottomSheet();
-        addNewTaskBottomSheet.show(getSupportFragmentManager(), "addNewTaskBottomSheet");
-    }
-
-    /**
-     * Displays the message to inform the user there are no tasks
-     */
-    private void HideShowNoTaskMessage() {
-        int viewVisibility = taskList.size() == 0 ? View.VISIBLE : View.GONE;
-        noDataTextView.setVisibility(viewVisibility);
-    }
-
-    //==========================================================================================
-    //                                  Database Manager
-    //==========================================================================================
-    //region Handle Database
     /**
      * Saves a Task to the Firebase Database
+     *
      * @param taskModel the Main Task
      */
     public static void PushToDatabase(TaskModel taskModel) {
@@ -93,6 +72,29 @@ public class TaskActivity extends AppCompatActivity {
 
         // Create a child with index value
         reference.child(Objects.requireNonNull(key)).setValue(taskModel);
+    }
+
+    /**
+     * Floating Action Button Listener, opens a new BottomSheet for Creating or Modifying a task
+     *
+     * @param view the View
+     */
+    private void fabListener(View view) {
+        AddNewTaskBottomSheet addNewTaskBottomSheet = new AddNewTaskBottomSheet();
+        addNewTaskBottomSheet.show(getSupportFragmentManager(), "addNewTaskBottomSheet");
+    }
+
+    //==========================================================================================
+    //                                  Database Manager
+    //==========================================================================================
+    //region Handle Database
+
+    /**
+     * Displays the message to inform the user there are no tasks
+     */
+    private void HideShowNoTaskMessage() {
+        int viewVisibility = taskList.size() == 0 ? View.VISIBLE : View.GONE;
+        noDataTextView.setVisibility(viewVisibility);
     }
 
     /**

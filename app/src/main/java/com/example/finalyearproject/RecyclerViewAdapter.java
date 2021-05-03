@@ -113,6 +113,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
     //                              More Options Popup functions
     //==========================================================================================
     //region More Options Popup functions
+
     /**
      * ImageView Listener, used for displaying the MoreOptions popup Menu
      */
@@ -180,7 +181,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
 
     /**
      * Checkbox Listener, marks a task as complete or incomplete when checked or unchecked
-     * @param checkbox the checkbox
+     *
+     * @param checkbox  the checkbox
      * @param taskModel the Main Task
      * @param isChecked true if the checkbox is checked
      */
@@ -195,7 +197,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
 
     /**
      * Marks all sub-tasks as complete when Main Task is checked
-     * @param checkbox the checkbox
+     *
+     * @param checkbox  the checkbox
      * @param taskModel the Main Task
      */
     private void MarkSubTasksAsComplete(CompoundButton checkbox, TaskModel taskModel) {
@@ -241,7 +244,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
 
     /**
      * Marks all sub-tasks as incomplete when Main Task is unchecked
-     * @param checkbox the checkbox
+     *
+     * @param checkbox  the checkbox
      * @param taskModel the Main Task
      */
     private void MarkSubTasksAsIncomplete(CompoundButton checkbox, TaskModel taskModel) {
@@ -292,6 +296,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
     //                               Handle Task Clicks
     //==========================================================================================
     //region Handle Task Clicks
+
     /**
      * Handles short clicks, used for opening Sub-Task Activity list
      */
@@ -429,6 +434,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> impl
 
     /**
      * Method used for Filtering Tasks
+     *
      * @return search Filter
      */
     @Override

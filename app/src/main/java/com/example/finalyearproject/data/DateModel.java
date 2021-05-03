@@ -36,6 +36,7 @@ public class DateModel {
 
     /**
      * Formats the Integers used for date
+     *
      * @return a Date string in the format: dd/mm/yyyy
      */
     @SuppressLint("DefaultLocale")

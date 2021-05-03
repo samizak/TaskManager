@@ -27,6 +27,7 @@ public class TimeModel {
 
     /**
      * Formats the Integers used for time
+     *
      * @return a Time string in the format: hh:mm
      */
     public String FormatTime() {

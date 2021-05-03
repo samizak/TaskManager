@@ -44,9 +44,10 @@ public class ImportExportData {
 
     /**
      * Converts TaskModel ArrayList into a JSON string and saves the encrypted data to file
+     *
      * @param resultCode ResultCode from Intent
-     * @param data Intent data
-     * @param taskList The list of tasks
+     * @param data       Intent data
+     * @param taskList   The list of tasks
      */
     public void ExportTasks(int resultCode, Intent data, ArrayList<TaskModel> taskList) {
         if (resultCode == RESULT_OK) {
@@ -70,6 +71,7 @@ public class ImportExportData {
 
     /**
      * Decrypts JSON String from file and converts it into ToDoModel ArrayList and pushes it to Firebase Database
+     *
      * @param data Intent data
      */
     public void ImportTasks(Intent data) {
@@ -94,6 +96,7 @@ public class ImportExportData {
 
     /**
      * Reads data from file using URI and returns string
+     *
      * @param uri Location of the file
      * @return Returns file content
      */

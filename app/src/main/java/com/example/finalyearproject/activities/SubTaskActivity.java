@@ -42,6 +42,7 @@ public class SubTaskActivity extends AppCompatActivity {
 
     /**
      * Gets the Main Task from Firebase Database
+     *
      * @param id the ID of the Main Task
      */
     private void getTaskData(final String id) {
@@ -85,6 +86,7 @@ public class SubTaskActivity extends AppCompatActivity {
 
     /**
      * Floating Action Button Listener, opens a new Dialog for Creating or Modifying a sub-task
+     *
      * @param v the View
      */
     private void fabListener(View v) {

@@ -62,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Checks the login details
+     *
      * @param task A Firebase task
      */
     private void CheckLoginDetails(Task<?> task) {

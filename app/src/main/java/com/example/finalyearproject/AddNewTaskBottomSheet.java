@@ -59,6 +59,7 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
 
     /**
      * Formats the Date and Time into a single String
+     *
      * @return Formatted Date and Time String
      */
     private String formatDateTime() {
@@ -187,6 +188,7 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
     //                                  Handle Creating and Updating Tasks
     //==========================================================================================
     //region Handle Creating and Updating Tasks
+
     /**
      * Button Listener used for Saving a Main Task
      */
@@ -206,7 +208,8 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
 
     /**
      * Saves a Task
-     * @param taskModel the Main Task
+     *
+     * @param taskModel     the Main Task
      * @param isPushNewTask true if a new task is being created
      */
     private void SaveTask(TaskModel taskModel, boolean isPushNewTask) {
@@ -223,8 +226,9 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
 
     /**
      * Creates a new Task
+     *
      * @param taskName the name of the task
-     * @param details the details of the task
+     * @param details  the details of the task
      */
     private void CreateNewTask(String taskName, String details) {
         // Skip if we are not Creating a new Task...
@@ -244,8 +248,9 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
 
     /**
      * Updates an existing Task
+     *
      * @param taskName the name of the task
-     * @param details the details of the task
+     * @param details  the details of the task
      */
     private void UpdateTask(String taskName, String details) {
         // Skip if we not Updating an existing Task
@@ -276,6 +281,7 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
 
     /**
      * Created a Notification at the Date and Time specified by the user
+     *
      * @param taskModel the Main Task
      */
     public void SendNotification(TaskModel taskModel) {
@@ -304,6 +310,7 @@ public class AddNewTaskBottomSheet extends BottomSheetDialogFragment {
 
     /**
      * Automatically fills in the data when editing a Task
+     *
      * @param bundle a bundle used for passing data between Activities
      */
     private void AutoFillIfEditingTask(Bundle bundle) {

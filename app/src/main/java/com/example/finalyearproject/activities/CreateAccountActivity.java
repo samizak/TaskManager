@@ -42,6 +42,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     /**
      * Checks the login details
+     *
      * @param task A Firebase task
      */
     private void CheckLoginDetails(Task<?> task) {
@@ -83,6 +84,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     /**
      * Checks if the Email is in a Valid format
+     *
      * @param email The Email
      * @return true if the Email is in a valid format
      */
@@ -92,6 +94,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     /**
      * Checks if the Password is valid
+     *
      * @param password The Password
      * @return true if the password is in a valid format
      */

@@ -32,6 +32,7 @@ public class EncryptDecryptData {
 
     /**
      * Generate a key spec from the password
+     *
      * @return created and returns a new SecretKeySpec
      */
     private SecretKeySpec GetKey() throws NoSuchAlgorithmException {
@@ -42,6 +43,7 @@ public class EncryptDecryptData {
 
     /**
      * Generate random IV
+     *
      * @return created and returns a new IvParameterSpec
      */
     public IvParameterSpec GetIV() {
@@ -50,7 +52,8 @@ public class EncryptDecryptData {
     }
 
     /**
-     *  Encrypts a JSON String
+     * Encrypts a JSON String
+     *
      * @param plainText a JSON String to be encrypted
      * @return the encrypted JSON String
      */
@@ -63,6 +66,7 @@ public class EncryptDecryptData {
 
     /**
      * Decrypts an Encrypted JSON String
+     *
      * @param encryptedText an encrypted String to be decrypted
      * @return the decrypted JSON String
      */

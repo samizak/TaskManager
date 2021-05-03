@@ -58,6 +58,7 @@ public class RecyclerViewAdapterSubTask extends RecyclerView.Adapter<MyViewHolde
     //                                  Multi-Select Menu
     //==========================================================================================
     //region Multi-Select Menu
+
     /**
      * This method is called when the Select-All Button is pressed
      */
@@ -107,6 +108,7 @@ public class RecyclerViewAdapterSubTask extends RecyclerView.Adapter<MyViewHolde
     //                              More Options Popup functions
     //==========================================================================================
     //region More Options Popup functions
+
     /**
      * ImageView Listener, used for displaying the MoreOptions popup Menu
      */
@@ -182,10 +184,12 @@ public class RecyclerViewAdapterSubTask extends RecyclerView.Adapter<MyViewHolde
     //                      Handle Task Check box Checked/Unchecked
     //==========================================================================================
     //region Handle Task Check box Checked/Unchecked
+
     /**
      * Checkbox Listener, marks a task as complete or incomplete when checked or unchecked
+     *
      * @param subTaskModel the Sub-Task
-     * @param isChecked true if the checkbox is checked
+     * @param isChecked    true if the checkbox is checked
      */
     private void TaskCompleteCheckboxListener(SubTaskModel subTaskModel, boolean isChecked) {
         // Update taskModel completion in database
@@ -198,6 +202,7 @@ public class RecyclerViewAdapterSubTask extends RecyclerView.Adapter<MyViewHolde
     //                               Handle Task Clicks
     //==========================================================================================
     //region Handle Task Clicks
+
     /**
      * Handles short clicks, used for opening Sub-Task Activity list
      */
